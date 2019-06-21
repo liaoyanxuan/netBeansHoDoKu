@@ -66,7 +66,7 @@ public class SudokuGenerator {
     /** Number of solutions already found */
     private int solutionCount = 0;
     /** The recursion stack */
-    private RecursionStackEntry[] stack = new RecursionStackEntry[82];
+    private RecursionStackEntry[] stack = new RecursionStackEntry[82];    //级联，用于回溯backtracing
     /** The order in which cells are set when generating a full grid. */
     private int[] generateIndices = new int[81];
     /** The cells of a newly generated sudoku (full board) */
@@ -411,7 +411,7 @@ public class SudokuGenerator {
         anzHS = 0;
         // limit the number of tries
         int actTries = 0;
-        // generate a random order for setting the cells
+        // generate a random order for setting the cells, 0-80 随机序列
         int max = generateIndices.length;
         for (int i = 0; i < max; i++) {
             generateIndices[i] = i;
@@ -427,11 +427,12 @@ public class SudokuGenerator {
             generateIndices[index2] = dummy;
         }
         // first set a new empty Sudoku
-        stack[0].sudoku.set(EMPTY_GRID);
+        stack[0].sudoku.set(EMPTY_GRID);    //0级，空数独
         int level = 0;
         stack[0].index = -1;
         while (true) {
             // get the next unsolved cell according to generateIndices
+            System.out.println("stack[level].sudoku.getUnsolvedCellsAnz()  " + stack[level].sudoku.getUnsolvedCellsAnz());
             if (stack[level].sudoku.getUnsolvedCellsAnz() == 0) {
                 // generation is complete
                 System.arraycopy(stack[level].sudoku.getValues(), 0, newFullSudoku, 0, newFullSudoku.length);
@@ -440,32 +441,33 @@ public class SudokuGenerator {
                 int index = -1;
                 int[] actValues = stack[level].sudoku.getValues();
                 for (int i = 0; i < Sudoku2.LENGTH; i++) {
-                    int actTry = generateIndices[i];
+                    int actTry = generateIndices[i];   //一个随机的格子
                     if (actValues[actTry] == 0) {
                         index = actTry;
                         break;
                     }
                 }
-                level++;
+                level++;                                                //级联
                 stack[level].index = (short) index;
-                stack[level].candidates = Sudoku2.POSSIBLE_VALUES[stack[level - 1].sudoku.getCell(index)];
+                stack[level].candidates = Sudoku2.POSSIBLE_VALUES[stack[level - 1].sudoku.getCell(index)];  //本级要解决的格子，从上一级获得对应格子的候选数
                 stack[level].candIndex = 0;
             }
 
             // not too many tries...
             actTries++;
+            System.out.println("doGenerateFullGrid actTries:  " + actTries);
             if (actTries > 100) {
                 return false;
             }
 
             // go to the next level
             boolean done = false;
-            do {
+            do {                              //递归
                 // this loop runs as long as the next candidate tried produces an
                 // invalid sudoku or until all possibilities have been tried
 
                 // fall back all levels, where nothing is to do anymore
-                while (stack[level].candIndex >= stack[level].candidates.length) {
+                while (stack[level].candIndex >= stack[level].candidates.length) {  //本级本格子候选数都尝试完，没有合适的，回溯到上一级
                     level--;
                     if (level <= 0) {
                         // no level with candidates left
@@ -474,23 +476,29 @@ public class SudokuGenerator {
                     }
                 }
                 if (done) {
+                    //无解，跳出小循环
                     break;
                 }
-                // try the next candidate
+                // try the next candidate，尝试下一个候选数
                 int nextCand = stack[level].candidates[stack[level].candIndex++];
                 // start with a fresh sudoku
                 anzTries++;
-                stack[level].sudoku.setBS(stack[level - 1].sudoku);
-                if (!stack[level].sudoku.setCell(stack[level].index, nextCand, false, false)) {
-                    // invalid -> try next candidate
+                stack[level].sudoku.setBS(stack[level - 1].sudoku);  //前进：继承上一级状态 ， 或者 回溯：返回到上一级状态，状态重置
+                //设置候选数，如果设置不成功，则继续循环尝试（回溯或尝试下一个候选数），也会改动可见区域的候选数（掩码）
+                 if (!stack[level].sudoku.setCell(stack[level].index, nextCand, false, false)) {    
+                    // invalid -> try next candidate，value无效
                     continue;
                 }
+                 //在设置完一个格子后，检查当前盘面是否存在Single，可以填入对应的数字；所以一次小循环不一定只解决一个格子，越到后面一次小循环会让盘面出现多个single
                 if (setAllExposedSingles(stack[level].sudoku)) {
                     // valid move, break from the inner loop to advance to the next level
+                    //该级设置成功，跳出小循环
                     break;
                 }
             } while (true);
+            
             if (done) {
+                 //无解，跳出大循环
                 break;
             }
         }

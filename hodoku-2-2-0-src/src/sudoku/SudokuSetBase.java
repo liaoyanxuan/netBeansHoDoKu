@@ -31,7 +31,10 @@ public class SudokuSetBase implements Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final SudokuSet EMPTY_SET = new SudokuSet();
-    public static final long[] MASKS = {
+    //数字组合映射到掩码
+    //数字-->映射到位码  ------->通过位码进行组合运算，变成掩码   ------------>
+    //掩码的优点是操作组合起来方便
+    public static final long[] MASKS = {    //可以表示0到63   0x0000000000000001L 表示索引0，左移1位表示1，左移63位表示63， 低位mask1
         0x0000000000000001L, 0x0000000000000002L, 0x0000000000000004L, 0x0000000000000008L,
         0x0000000000000010L, 0x0000000000000020L, 0x0000000000000040L, 0x0000000000000080L,
         0x0000000000000100L, 0x0000000000000200L, 0x0000000000000400L, 0x0000000000000800L,
@@ -53,7 +56,7 @@ public class SudokuSetBase implements Cloneable, Serializable {
     public static final long MAX_MASK2 = 0x1FFFFL;
     protected long mask1 = 0; //  0 - 63
 
-    protected long mask2 = 0; // 64 - 80
+    protected long mask2 = 0; // 64 - 80        0x0000000000000001L,表示64,64到80一共17个数字，满掩码是 0x1FFFFL
 
     protected boolean initialized = true;
 

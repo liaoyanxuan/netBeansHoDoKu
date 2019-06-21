@@ -252,7 +252,7 @@ public class SudokuStepFinder {
             solver.cleanUp();
         }
     }
-
+    //获取下一步的解决之道
     /**
      * Gets the next step of type <code>type</code>.
      * @param type

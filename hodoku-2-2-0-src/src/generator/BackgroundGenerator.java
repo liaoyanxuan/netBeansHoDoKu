@@ -104,28 +104,27 @@ public class BackgroundGenerator {
             creator = SudokuGeneratorFactory.getDefaultGeneratorInstance();
         }
         while (dlg == null || ! Thread.currentThread().isInterrupted()) {
-            sudoku = creator.generateSudoku(true);
+            sudoku = creator.generateSudoku(true);  //产生一个随机数独
             if (sudoku == null) {
                 // impossible to create sudoku due to an invalid pattern
                 return null;
             }
             Sudoku2 solvedSudoku = sudoku.clone();
-            boolean ok = solver.solve(level, solvedSudoku, true, null, false, 
-                    Options.getInstance().solverSteps, mode);
+            //尝试去解这个数独，传入难度，配置要包含的解法，mode模式 GameMode.PLAYING，GameMode.LEARNING，GameMode.PRACTISING
+            boolean ok = solver.solve(level, solvedSudoku, true, null, false, Options.getInstance().solverSteps, mode);  
             boolean containsTrainingStep = true;
             if (mode != GameMode.PLAYING) {
                 containsTrainingStep = false;
-                List<SolutionStep> steps = solver.getSteps();
+                List<SolutionStep> steps = solver.getSteps();   //返回解决步骤
                 for (SolutionStep step : steps) {
-                    if (step.getType().getStepConfig().isEnabledTraining()) {
+                    if (step.getType().getStepConfig().isEnabledTraining()) { //解法是否在练习模式开启
                         containsTrainingStep = true;
-                        break;
+                        break;   //跳出for循环
                     }
                 }
             }
-            if (ok && containsTrainingStep && 
-                    (solvedSudoku.getLevel().getOrdinal() == level.getOrdinal()
-                    || mode == GameMode.LEARNING)) {
+            //有解ok，且包含练习步骤，且难度与设置的一致或在学习模式，则设置难度等级level和分数，跳出while循环，否则继续while循环，直到找到符合要求的数独或者尝试次数超过最大
+            if (ok && containsTrainingStep && (solvedSudoku.getLevel().getOrdinal() == level.getOrdinal()|| mode == GameMode.LEARNING)) {
                 sudoku.setLevel(solvedSudoku.getLevel());
                 sudoku.setScore(solvedSudoku.getScore());
                 break;

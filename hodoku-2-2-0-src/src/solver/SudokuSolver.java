@@ -235,6 +235,7 @@ public class SudokuSolver {
             }
             
             // jetzt eine Methode nach der anderen, aber immer nur einmal; wenn etwas gefunden wurde continue
+            //得到提示步骤，根据stepConfigs
             step = getHint(singlesOnly, stepConfigs, acceptAnyway);
             if (step != null) {
 //                System.out.println("Step: " + step.toString(2));
@@ -244,7 +245,7 @@ public class SudokuSolver {
                     acceptAnyway = true;
                 }
                 steps.add(step);
-                getStepFinder().doStep(step);
+                getStepFinder().doStep(step);  //执行步骤
                 if (step.getType() == SolutionType.GIVE_UP) {
                     step = null;
                 }
@@ -462,7 +463,7 @@ public class SudokuSolver {
             }
             Logger.getLogger(getClass().getName()).log(Level.FINER, "trying {0}: ", SolutionStep.getStepName(type));
             long nanos = System.nanoTime();
-            hint = getStepFinder().getStep(type);
+            hint = getStepFinder().getStep(type);   //获得步骤
             nanos = System.nanoTime() - nanos;
             Logger.getLogger(getClass().getName()).log(Level.FINER, "{0}ms ({1})", new Object[]{nanos / 1000, hint != null ? hint.toString(2) : "-"});
 //            if (nanos > 20000) {
