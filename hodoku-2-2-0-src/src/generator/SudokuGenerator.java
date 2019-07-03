@@ -69,16 +69,16 @@ public class SudokuGenerator {
     private RecursionStackEntry[] stack = new RecursionStackEntry[82];    //级联，用于回溯backtracing
     /** The order in which cells are set when generating a full grid. */
     private int[] generateIndices = new int[81];
-    /** The cells of a newly generated sudoku (full board) */
+    /** The cells of a newly generated sudoku (full board) */  //满数独
     private int[] newFullSudoku = new int[81];
-    /** The cells of a newly generated valid sudoku. */
+    /** The cells of a newly generated valid sudoku. */ //有效的数独
     private int[] newValidSudoku = new int[81];
     /** A random generator for creating new puzzles. */
     private Random rand = new Random();
 
-    private int anzTries = 0;
-    private int anzNS = 0;
-    private int anzHS = 0;
+    private int anzTries = 0;  //尝试次数
+    private int anzNS = 0;   //通过naked single解决的
+    private int anzHS = 0;   //通过hidden single解决的
     private int anzTriesGen = 0;
     private int anzClues = 0;
     private long nanos = 0;
@@ -174,7 +174,7 @@ public class SudokuGenerator {
 //        System.out.println("start solving " + getSolutionAsString(cellValues));
 //        actSetNanos = System.nanoTime();
         // start with an empty sudoku
-        stack[0].sudoku.set(EMPTY_GRID);
+        stack[0].sudoku.set(EMPTY_GRID);    //层级，用于递归，回溯
         stack[0].candidates = null;
         stack[0].candIndex = 0;
 
@@ -186,8 +186,8 @@ public class SudokuGenerator {
 //                setAllExposedSingles(stack[0].sudoku);
 //            }
 //        }
-        // set up the sudoku
-//        System.out.println("setting up sudoku...");
+        // set up the sudoku，初始化stack[0]的数独，设置候选
+//        System.out.println("setting up sudoku..."); 
         for (int i = 0; i < cellValues.length; i++) {
             int value = cellValues[i];
             if (value >= 1 && value <= 9) {
@@ -195,7 +195,7 @@ public class SudokuGenerator {
             }
         }
         stack[0].sudoku.rebuildInternalData();
-        setAllExposedSingles(stack[0].sudoku);
+        setAllExposedSingles(stack[0].sudoku);  //设置Single
 //        System.out.println("and solve...");
 
         // solve it
@@ -203,6 +203,9 @@ public class SudokuGenerator {
     }
 
     /**
+     * 把空格子填满，使用创建满格数组的方式，不同的是，填满后会继续尝试下一个候选数方案，
+     * 继续寻找可解方案，直到全部候选数都尝试完（每一个层级的组合都尝试），如果找到1个以上的
+     * 有解方案，则该数独没有唯一解，是无效数独；如果遍历尝试完，数独只有唯一解，则是有效数独
      * The real backtracking solver: Recursion is simulated by
      * a recursion stack ({@link #stack}), if Singles are exposed
      * during solving, they are set.
@@ -227,9 +230,9 @@ public class SudokuGenerator {
 //        System.out.println("solve: " + getSolutionAsString(stack[0].sudoku.getValues()));
 //        System.out.println("unsolvedCellsAnz = " + stack[0].sudoku.getUnsolvedCellsAnz());
         if (stack[0].sudoku.getUnsolvedCellsAnz() == 0) {
-            // already solved, nothing to do
+            // already solved, nothing to do，记录解决方案
             solution = Arrays.copyOf(stack[0].sudoku.getValues(), Sudoku2.LENGTH);
-            solutionCount++;
+            solutionCount++;  //解决方案+1
             if (DEBUG) {
                 System.out.println("  puzzle was already solved!");
             }
@@ -240,10 +243,10 @@ public class SudokuGenerator {
             // get the next unsolved cells with the fewest number of candidates
             if (stack[level].sudoku.getUnsolvedCellsAnz() == 0) {
                 // sudoku is solved
-                solutionCount++;
+                solutionCount++; //解决方案+1
                 // count the solutions
                 if (solutionCount == 1) {
-                    // first solution is recorded
+                    // first solution is recorded，记录解决方案
                     solution = Arrays.copyOf(stack[level].sudoku.getValues(), Sudoku2.LENGTH);
                 } else if (solutionCount > 1) {
                     // but not more than 1000
@@ -260,6 +263,7 @@ public class SudokuGenerator {
 //                    if (sudoku.getCell(i) != 0) {
 //                        System.out.println("cell[" + i + "] = " + Sudoku2.ANZ_VALUES[sudoku.getCell(i)]);
 //                    }
+//                  找出候选数最少的格子尝试
                     if (sudoku.getCell(i) != 0 && Sudoku2.ANZ_VALUES[sudoku.getCell(i)] < anzCand) {
                         index = i;
                         anzCand = Sudoku2.ANZ_VALUES[sudoku.getCell(i)];
@@ -283,8 +287,9 @@ public class SudokuGenerator {
                 // invalid sudoku or until all possibilities have been tried
 
                 // fall back all levels, where nothing is to do anymore
+                //继续尝试下一个方案
                 while (stack[level].candIndex >= stack[level].candidates.length) {
-                    level--;
+                    level--;    
                     if (level <= 0) {
                         // no level with candidates left
                         done = true;
@@ -301,14 +306,18 @@ public class SudokuGenerator {
                 stack[level].sudoku.setBS(stack[level - 1].sudoku);
                 if (!stack[level].sudoku.setCell(stack[level].index, nextCand, false, false)) {
                     // invalid -> try next candidate
+                    //继续小循环
                     continue;
                 }
                 if (setAllExposedSingles(stack[level].sudoku)) {
                     // valid move, break from the inner loop to advance to the next level
+                    //跳出小循环
                     break;
                 }
             } while (true);
+            //要么可以得到一个解，要么尝试失败；
             if (done) {
+                //无解，跳出大循环
                 break;
             }
         }
@@ -442,7 +451,7 @@ public class SudokuGenerator {
                 int[] actValues = stack[level].sudoku.getValues();
                 for (int i = 0; i < Sudoku2.LENGTH; i++) {
                     int actTry = generateIndices[i];   //一个随机的格子
-                    if (actValues[actTry] == 0) {
+                    if (actValues[actTry] == 0) {   //0表示未设置
                         index = actTry;
                         break;
                     }
@@ -542,12 +551,12 @@ public class SudokuGenerator {
      * puzzle by deleting cells. If a deletion produces a grid with more
      * than one solution it is of course undone.<br><br>
      * 
-     * @param isSymmetric
+     * @param isSymmetric    //是否对称
      * @param pattern
      */
     private void generateInitPos(boolean isSymmetric) {
         int maxPosToFill = 17; // no less than 17 givens
-        boolean[] used = new boolean[81]; // try every cell only once
+        boolean[] used = new boolean[81]; // try every cell only once，每格只尝试1次；
         int usedCount = used.length;
         Arrays.fill(used, false);
 
@@ -556,7 +565,7 @@ public class SudokuGenerator {
         int remainingClues = newValidSudoku.length;
 
         // do until we have only 17 clues left or until all cells have been tried
-        while (remainingClues > maxPosToFill && usedCount > 1) {
+        while (remainingClues > maxPosToFill && usedCount > 1) {   //最多尝试81次以及格子要在17个以上
             // get the next position to try
             int i = rand.nextInt(81);
             do {
@@ -566,37 +575,38 @@ public class SudokuGenerator {
                     i = 0;
                 }
             } while (used[i]);
-            used[i] = true;
+            used[i] = true;   //该格已经尝试过
             usedCount--;
 
             if (newValidSudoku[i] == 0) {
                 // already deleted (symmetry)
                 continue;
             }
+            //对称性
             if (isSymmetric && (i/9 != 4 || i%9 != 4 ) && newValidSudoku[9 * (8 - i / 9) + (8 - i % 9)] == 0) {
                 // the other end of our symmetric puzzle is already deleted
                 continue;
             }
-            // delete cell
+            // delete cell，删除格子
             newValidSudoku[i] = 0;
             remainingClues--;
             int symm = 0;
             if (isSymmetric && (i/9 != 4 || i%9 != 4 )) {
                 symm = 9 * (8 - i / 9) + (8 - i % 9);
-                newValidSudoku[symm] = 0;
+                newValidSudoku[symm] = 0;   //symm 对称位置的格子
                 used[symm] = true;
                 usedCount--;
                 remainingClues--;
             }
 //            long actNanos = System.nanoTime();
-            solve(newValidSudoku);
+            solve(newValidSudoku);   //尝试解决，把格子填满，看是否不止一个解
 //            nanos += System.nanoTime() - actNanos;
             anzTriesGen++;
-            if (solutionCount > 1) {
-                newValidSudoku[i] = newFullSudoku[i];
+            if (solutionCount > 1) {        //解大于1，此次删除失败
+                newValidSudoku[i] = newFullSudoku[i];    //回退
                 remainingClues++;
                 if (isSymmetric && (i/9 != 4 || i%9 != 4 )) {
-                    newValidSudoku[symm] = newFullSudoku[symm];
+                    newValidSudoku[symm] = newFullSudoku[symm];  //恢复对称位置symm的格子
                     remainingClues++;
                 }
             }
@@ -611,8 +621,8 @@ public class SudokuGenerator {
      */
     private boolean setAllExposedSingles(Sudoku2 sudoku) {
         boolean valid = true;
-        SudokuSinglesQueue nsQueue = sudoku.getNsQueue();
-        SudokuSinglesQueue hsQueue = sudoku.getHsQueue();
+        SudokuSinglesQueue nsQueue = sudoku.getNsQueue();   //naked single
+        SudokuSinglesQueue hsQueue = sudoku.getHsQueue();   //hidden single
         do {
             int singleIndex = 0;
             // first all Naked Singles

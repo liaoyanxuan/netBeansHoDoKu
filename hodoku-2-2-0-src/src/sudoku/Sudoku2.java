@@ -189,8 +189,8 @@ public class Sudoku2 implements Cloneable {
     /** Bitmaps for candidates set by the user if "show all candidates" is not set. */
     private short[] userCells = new short[LENGTH];         //用户设置的候选数
     /** Number of free cells per constraint and per candidate (CAUTION: candidates
-     *  go from 1 to 9). Used to detect Hidden Singles easily */
-    private byte[][] free = new byte[ALL_UNITS.length][UNITS + 1];
+     *  go from 1 to 9). Used to detect Hidden Singles easily */     //用于识别Hidden Singles
+    private byte[][] free = new byte[ALL_UNITS.length][UNITS + 1];   //表示 所在行/列/宫的特定候选数的数量，用于hidden singles;
     /** number of unfilled cells in the grid */
     private int unsolvedCellsAnz;
     /** The values of the cells (0 means cell not set); if a cell is set, the corresponding entry in {@link #cells} is deleted */
@@ -216,7 +216,7 @@ public class Sudoku2 implements Cloneable {
     // while setting/deleting candidates; two synchronized arrays contain index/value pairs
     /** A queue for newly detected Naked Singles */     //一个格子，通过所在作用范围（行，列，宫）排除后，只能填唯一的数字
     private SudokuSinglesQueue nsQueue = new SudokuSinglesQueue();
-    /** A queue for newly detected Hidden Singles */    //一个格子中的候选数有多个，但是有一个候选数 不在所在区（行/列/宫）的其他格子的候选数中
+    /** A queue for newly detected Hidden Singles */    //一个格子中的候选数有多个，但是该格子中有一个候选数， 不在所在区（行/列/宫）的其他格子的候选数中
     private SudokuSinglesQueue hsQueue = new SudokuSinglesQueue();
 
     static {
@@ -1038,12 +1038,12 @@ public class Sudoku2 implements Cloneable {
             } else {
                 // one more unsolved cell
                 anz++;
-                // check the candidates and rebuild the Naked Single queue
+                // check the candidates and rebuild the Naked Single queue，检查候选数，重建nake single;
                 int[] cands = POSSIBLE_VALUES[cells[index]];
                 for (int i = 0; i < cands.length; i++) {
                     // add candidate to free
-                    for (int j = 0; j < CONSTRAINTS[index].length; j++) {
-                        free[CONSTRAINTS[index][j]][cands[i]]++;
+                    for (int j = 0; j < CONSTRAINTS[index].length; j++) {  //index所在行,列,宫
+                        free[CONSTRAINTS[index][j]][cands[i]]++;   //（index格子所在区域）某个特定的候选数的个数
                     }
                 }
                 // Naked Single?
@@ -1057,8 +1057,11 @@ public class Sudoku2 implements Cloneable {
         for (int i = 0; i < free.length; i++) {
             for (int j = 1; j <= 9; j++) {
 //                System.out.println("free[" + i + "][" + j + "] = " + free[i][j]);
-                if (free[i][j] == 1) {
-                    while (addHiddenSingle(i, j) == false);
+                if (free[i][j] == 1) {   //所在行/列/宫i， 只有候选数j 一个；
+                    while (addHiddenSingle(i, j) == false)
+                    {
+                        System.out.println("Fatal Error:addHiddenSingle Fail!!");
+                    }
                 }
             }
         }
@@ -1900,7 +1903,7 @@ public class Sudoku2 implements Cloneable {
         }
         return valid;
     }
-
+    //设置格子的value,影响候选以及buddies格子的候选
     public void setCellBS(int index, int value) {
 //        if (values[index] == value) {
 //            // nothing to do
@@ -1910,7 +1913,7 @@ public class Sudoku2 implements Cloneable {
 //            System.out.println("   set " + index + "/" + value);
         // set a cell
         // adjust mask
-        cells[index] = 0;
+        cells[index] = 0;  //候选，已经设置
         // check the buddies
         for (int i = 0; i < buddies[index].size(); i++) {
             int buddyIndex = buddies[index].get(i);
@@ -2055,7 +2058,7 @@ public class Sudoku2 implements Cloneable {
                         Sudoku2.getCol(i) == Sudoku2.getCol(j) ||    //index是否在相同的列
                         Sudoku2.getBlock(i) == Sudoku2.getBlock(j))) {    //index是否在相同的宫
                     // Zelle ist Buddy    cell is Buddy
-                    buddies[i].add(j);    //同一个区域，相互可见，是buddy
+                    buddies[i].add(j);    //同一个区域，相互可见，是buddy，设置mask
                 }
             }
             buddiesM1[i] = buddies[i].getMask1();

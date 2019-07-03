@@ -104,18 +104,18 @@ public class BackgroundGenerator {
             creator = SudokuGeneratorFactory.getDefaultGeneratorInstance();
         }
         while (dlg == null || ! Thread.currentThread().isInterrupted()) {
-            sudoku = creator.generateSudoku(true);  //产生一个随机数独
+            sudoku = creator.generateSudoku(true);  //产生一个有效数独
             if (sudoku == null) {
                 // impossible to create sudoku due to an invalid pattern
                 return null;
             }
             Sudoku2 solvedSudoku = sudoku.clone();
-            //尝试去解这个数独，传入难度，配置要包含的解法，mode模式 GameMode.PLAYING，GameMode.LEARNING，GameMode.PRACTISING
+            //解这个数独，形成解题步骤step，传入难度，配置要包含的解法，mode模式 GameMode.PLAYING，GameMode.LEARNING，GameMode.PRACTISING
             boolean ok = solver.solve(level, solvedSudoku, true, null, false, Options.getInstance().solverSteps, mode);  
             boolean containsTrainingStep = true;
-            if (mode != GameMode.PLAYING) {
+            if (mode != GameMode.PLAYING) {  //非Playing模式
                 containsTrainingStep = false;
-                List<SolutionStep> steps = solver.getSteps();   //返回解决步骤
+                List<SolutionStep> steps = solver.getSteps();   //返回解题步骤
                 for (SolutionStep step : steps) {
                     if (step.getType().getStepConfig().isEnabledTraining()) { //解法是否在练习模式开启
                         containsTrainingStep = true;

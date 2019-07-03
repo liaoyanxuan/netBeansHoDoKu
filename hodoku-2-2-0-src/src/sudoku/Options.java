@@ -156,21 +156,25 @@ public final class Options {
         new StepConfig(1210, SolutionType.LOCKED_CANDIDATES_2, DifficultyType.MEDIUM.ordinal(), SolutionCategory.INTERSECTIONS, 50, 0, true, true, 1210, true, false)
     };
     // nicht sortierte steps mit allen Änderungen -> wird so in *.cfg-File geschrieben
+    //所有更改的未排序步骤 - >将写入* .cfg文件
     private StepConfig[] orgSolverSteps = null;
     // sortierte Kopie, wird intern verwendet, darf aber nicht im *.cfg-File landen
+    //已排序的副本，在内部使用，但可能不会在* .cfg文件中结束
     public StepConfig[] solverSteps = null;
     // sortierte Kopie für Step-Progress, wird intern verwendet, darf aber nicht im *.cfg-File landen
+    //Step-Progress的已排序副本，在内部使用，但可能不会以* .cfg文件结尾
     public StepConfig[] solverStepsProgress = null;
     // internal cache for background creation
+    //用于后台创建的内部缓存
     public static final int CACHE_SIZE = 10;
     private String[][] normalPuzzles = new String[5][CACHE_SIZE]; // 10 puzzles per DifficultyLevel
     private String[] learningPuzzles = new String[CACHE_SIZE];    // 10 puzzles for training
     private String[] practisingPuzzles = new String[CACHE_SIZE];  // 10 puzzles for practising
     private int practisingPuzzlesLevel = -1;                      // the DifficultyLevel, for which the practising puzzles have been created
     // ChainSolver
-    public static final int RESTRICT_CHAIN_LENGTH = 20;      // maximale Länge von X-/XY-Chains, wenn restrictChainSize gesetzt ist
-    public static final int RESTRICT_NICE_LOOP_LENGTH = 10;  // maximale Länge von Nice-Loops, wenn restrictChainSize gesetzt ist
-    public static final boolean RESTRICT_CHAIN_SIZE = true;  // Länge der chains beschränken?
+    public static final int RESTRICT_CHAIN_LENGTH = 20;      // maximale Länge von X-/XY-Chains, wenn restrictChainSize gesetzt ist,设置restrictChainSize时的X / XY链的最大长度
+    public static final int RESTRICT_NICE_LOOP_LENGTH = 10;  // maximale Länge von Nice-Loops, wenn restrictChainSize gesetzt ist,设置restrictChainSize时，nice循环的最大长度
+    public static final boolean RESTRICT_CHAIN_SIZE = true;  // Länge der chains beschränken?  限制链的长度
     private int restrictChainLength = RESTRICT_CHAIN_LENGTH;
     private int restrictNiceLoopLength = RESTRICT_NICE_LOOP_LENGTH;
     private boolean restrictChainSize = RESTRICT_CHAIN_SIZE;

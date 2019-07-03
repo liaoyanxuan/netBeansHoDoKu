@@ -162,7 +162,7 @@ public class SudokuSet extends SudokuSetBase implements Cloneable {
             for (int i = 0; i < 64; i += 8) {  //0-7,8-15,16-23,24-31,32-39,40-47,48-55,56-63，每次检查8个
                 int mIndex = (int)((mask1 >> i) & 0xFF);    //& 0xFF   11111111  （0-7,8-15,16-23,24-31,32-39,40-47,48-55,56-63）
                 for (int j = 0; j < anzValues[mIndex]; j++) {  //此掩码对应的数字个数
-                    values[index++] = possibleValues[mIndex][j] + i;       //index是数组所以；  值表示buddies的索引
+                    values[index++] = possibleValues[mIndex][j] + i;       //index是数组索引； 值表示buddies的索引； possibleValues：掩码对应的数组
                 }
             }
         }

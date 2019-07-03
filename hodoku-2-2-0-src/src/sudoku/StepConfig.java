@@ -32,8 +32,8 @@ public final class StepConfig implements Cloneable, Comparable<StepConfig> {
     private int adminScore;            // currently not used
     private boolean enabled;           // used in solution?
     private boolean allStepsEnabled;   // searched for when all steps are found?
-    private int indexProgress;         // search order when rating the efficiency of steps
-    private boolean enabledProgress; // enabled when rating the efficiency of steps
+    private int indexProgress;         // search order when rating the efficiency of steps，评估步骤效率时的搜索顺序
+    private boolean enabledProgress;   // enabled when rating the efficiency of steps，在评定步骤效率时启用
     private boolean enabledTraining;   // enabled for traing/practising mode
     
     /** Creates a new instance of StepConfig */

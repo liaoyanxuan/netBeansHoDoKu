@@ -157,10 +157,10 @@ public class SudokuPanel extends javax.swing.JPanel implements Printable {
     private int cellSize; // KantenlÃ¤nge einer Zelle
     private int startSX;  // x-Koordinate des linken oberen Punktes des Sudoku
     private int startSY;  // y-Koordinate des linken oberen Punktes des Sudoku
-    private Graphics2D g2; // zum Zeichnen, spart eine Menge Parameter
-    private CubicCurve2D.Double cubicCurve = new CubicCurve2D.Double(); // fÃ¼r Chain-Pfeile
+    private Graphics2D g2; // zum Zeichnen, spart eine Menge Parameter, //用于绘图，保存了很多参数
+    private CubicCurve2D.Double cubicCurve = new CubicCurve2D.Double(); // fÃ¼r Chain-Pfeile,链箭头
     private Polygon arrow = new Polygon(); // Pfeilspitze
-    private Stroke arrowStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND); // Pfeilspitzen abrunden
+    private Stroke arrowStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND); // Pfeilspitzen abrunden,圆形箭头
     private Stroke strongLinkStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND); // strong links durchziehen
     private Stroke weakLinkStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
             10.0f, new float[]{5.0f}, 0.0f); // weak links punkten

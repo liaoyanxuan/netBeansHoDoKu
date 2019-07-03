@@ -177,6 +177,8 @@ public class SudokuSolver {
     }
     
     /**
+     * 解数独，如果等级太低或分数太低可拒绝，如果传入进度dialog，进度会更新，如果传入
+     * stepConfig，则截图步骤有包含至少一个在stepConfig中的step则接受（为非PLAYING模式）
      * The real solver method. Can reject a possible solution if the {@link DifficultyLevel}
      * doesnt match or if the score of the sudoku is too low. If a progress dialog
      * is passed in, the counters in the dialog are updated.<br>
@@ -245,12 +247,12 @@ public class SudokuSolver {
                     acceptAnyway = true;
                 }
                 steps.add(step);
-                getStepFinder().doStep(step);  //执行步骤
-                if (step.getType() == SolutionType.GIVE_UP) {
+                getStepFinder().doStep(step);  //执行步骤，形成新的盘面
+                if (step.getType() == SolutionType.GIVE_UP) {  //无解，放弃
                     step = null;
                 }
             }
-        } while (step != null);
+        } while (step != null);  //已经无step，完成
         // wenn der Score größer als der MaxScore der aktuellen Stufe, dann wird das
         // Puzzle höhergestuft.
         while (score > level.getMaxScore()) {
@@ -271,11 +273,11 @@ public class SudokuSolver {
             }
         }
         sudoku.setScore(score);
-        if (sudoku.isSolved()) {
+        if (sudoku.isSolved()) { //已解决
             sudoku.setLevel(level);
 //            System.out.println("        puzzle accepted!");
             return true;
-        } else {
+        } else {   //无法解决
             sudoku.setLevel(Options.getInstance().getDifficultyLevel(DifficultyType.EXTREME.ordinal()));
 //            System.out.println("        rejected: puzzle not solved!");
             return false;
@@ -424,6 +426,7 @@ public class SudokuSolver {
     }
 
     /**
+     * 如果singlesOnly为true，则只有single策略才会尝试
      * Get the next logical step for the internal sudoku. If <code>singlesOnly</code>
      * is set, only singles are tried.<br>
      * Since the steps are passed as argument this method can be used to
@@ -452,6 +455,7 @@ public class SudokuSolver {
             } else {
                 if (solverSteps[i].isEnabled() == false) {
                     // diesen Schritt nicht ausführen
+                    //不要这样做
                     continue;
                 }
             }
