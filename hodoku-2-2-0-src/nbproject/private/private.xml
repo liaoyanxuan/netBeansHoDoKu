@@ -3,19 +3,53 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/generator/SudokuGeneratorFactory.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/AlsInSolutionStep.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/GenerateSudokuProgressDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SetGivensDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/BackdoorSearchDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuCell.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/Main.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/Candidate.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/generator/BackgroundGenerator.java</file>
-            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SolutionStep.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigGeneratorPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SplitPanel.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/Sudoku2.java</file>
-            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/solver/SingleDigitPatternSolver.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigLevelFontPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/CheckRenderer.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigTrainigPanel.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SolutionPanel.java</file>
-            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuSinglesQueue.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/generator/SudokuGenerator.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ClipboardMode.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuSetBase.java</file>
-            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SolutionType.java</file>
-            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuSet.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigColorPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ColorKuImage.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/CellZoomPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/FindAllStepsProgressDialog.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/MainFrame.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuConsoleFrame.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SolverProgressDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigTrainingDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/GuiState.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigFindAllStepsPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/DifficultyLevel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/StatusColorPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/help/keyboard.html</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/AllStepsPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/GeneratorPatternPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/DifficultyType.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/AboutDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigGeneralPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SummaryPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuUtil.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/KeyboardLayoutFrame.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigColorkuPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigProgressPanel.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/Sudoku.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/SudokuSet.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ExtendedPrintDialog.java</file>
+            <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/sudoku/ConfigSolverPanel.java</file>
             <file>file:/F:/GitHubProject/netBeansHoDoKu/hodoku-2-2-0-src/src/solver/SudokuSolver.java</file>
         </group>
     </open-files>

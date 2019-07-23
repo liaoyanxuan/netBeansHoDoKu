@@ -46,13 +46,13 @@ package sudoku;
  */
 public class SudokuSet extends SudokuSetBase implements Cloneable {
     // für jede der 256 möglichen Kombinationen von Bits das entsprechende Array
-    //对于256个可能的位组合中的每一个，相应的数组
+    //对于256个可能的位组合中的每一个，相应的数字(0-7) 用来从位还原成数字
     private static int[][] possibleValues = new int[256][8];
     // und zu jeder Zahl die Länge des Arrays
     //对于每个数字，数组的长度
     public static int[] anzValues = new int[256];
     private static final long serialVersionUID = 1L;
-    //每个网格的
+    //每个网格的buddies
     private int[] values = null;
     private int anz = 0;
     
@@ -61,9 +61,9 @@ public class SudokuSet extends SudokuSetBase implements Cloneable {
         for (int i = 0; i < 256; i++) {   //i 255   11111111    0到255的掩码 分别映射的 数字组合（0-7）
             int index = 0;
             int mask = 1;
-            for (int j = 0; j < 8; j++) { // j: 0-7     0-1；1-10；2-100；3-1000；4-10000；5-100000；6-1000000；7-10000000  
+            for (int j = 0; j < 8; j++) { // j: 0-7     1-0；10-1；100-2；1000-3；10000-4；100000-5；1000000-6；10000000-7  
                 if ((i & mask) != 0) {
-                    possibleValues[i][index++] = j;   //掩码对应的数组
+                    possibleValues[i][index++] = j;   //掩码对应的数字
                 }
                 mask <<= 1;
             }

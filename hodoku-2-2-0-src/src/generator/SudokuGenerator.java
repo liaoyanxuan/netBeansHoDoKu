@@ -76,7 +76,7 @@ public class SudokuGenerator {
     /** A random generator for creating new puzzles. */
     private Random rand = new Random();
 
-    private int anzTries = 0;  //尝试次数
+    private int anzTries = 0;  //尝试次数，总共尝试的候选数状况，尝试次数
     private int anzNS = 0;   //通过naked single解决的
     private int anzHS = 0;   //通过hidden single解决的
     private int anzTriesGen = 0;
@@ -456,8 +456,8 @@ public class SudokuGenerator {
                         break;
                     }
                 }
-                level++;                                                //级联
-                stack[level].index = (short) index;
+                level++;   //下一级数独 ，级联
+                stack[level].index = (short) index; //要解决的index格,每一级都有自己负责的一个index
                 stack[level].candidates = Sudoku2.POSSIBLE_VALUES[stack[level - 1].sudoku.getCell(index)];  //本级要解决的格子，从上一级获得对应格子的候选数
                 stack[level].candIndex = 0;
             }
@@ -476,7 +476,7 @@ public class SudokuGenerator {
                 // invalid sudoku or until all possibilities have been tried
 
                 // fall back all levels, where nothing is to do anymore
-                while (stack[level].candIndex >= stack[level].candidates.length) {  //本级本格子候选数都尝试完，没有合适的，回溯到上一级
+                while (stack[level].candIndex >= stack[level].candidates.length) {  //本级本格子候选数都尝试完，没有合适的，回溯到上一级，上一级负责的index填的不对，重新填
                     level--;
                     if (level <= 0) {
                         // no level with candidates left
@@ -496,12 +496,14 @@ public class SudokuGenerator {
                 //设置候选数，如果设置不成功，则继续循环尝试（回溯或尝试下一个候选数），也会改动可见区域的候选数（掩码）
                  if (!stack[level].sudoku.setCell(stack[level].index, nextCand, false, false)) {    
                     // invalid -> try next candidate，value无效
+                    //继续小循环，下个候选数
                     continue;
                 }
                  //在设置完一个格子后，检查当前盘面是否存在Single，可以填入对应的数字；所以一次小循环不一定只解决一个格子，越到后面一次小循环会让盘面出现多个single
                 if (setAllExposedSingles(stack[level].sudoku)) {
                     // valid move, break from the inner loop to advance to the next level
                     //该级设置成功，跳出小循环
+                    
                     break;
                 }
             } while (true);

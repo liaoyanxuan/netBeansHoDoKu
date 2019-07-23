@@ -52,7 +52,7 @@ public class Sudoku2 implements Cloneable {
 
     //索引都是横排列
     /** All indices for every line */
-    public static final int[][] LINES = {       //行的索引
+    public static final int[][] LINES = {       //按顺序访问 行的索引
         {0, 1, 2, 3, 4, 5, 6, 7, 8},
         {9, 10, 11, 12, 13, 14, 15, 16, 17},
         {18, 19, 20, 21, 22, 23, 24, 25, 26},
@@ -64,7 +64,7 @@ public class Sudoku2 implements Cloneable {
         {72, 73, 74, 75, 76, 77, 78, 79, 80}
     };
     /** All indices for every column */
-    public static final int[][] COLS = {    //列的索引
+    public static final int[][] COLS = {    //按顺序访问 列的索引
         {0, 9, 18, 27, 36, 45, 54, 63, 72},
         {1, 10, 19, 28, 37, 46, 55, 64, 73},
         {2, 11, 20, 29, 38, 47, 56, 65, 74},
@@ -76,7 +76,7 @@ public class Sudoku2 implements Cloneable {
         {8, 17, 26, 35, 44, 53, 62, 71, 80}
     };
     /** All indices for every block */
-    public static final int[][] BLOCKS = {      //块的索引
+    public static final int[][] BLOCKS = {      //按顺序访问 宫的索引
         {0, 1, 2, 9, 10, 11, 18, 19, 20},
         {3, 4, 5, 12, 13, 14, 21, 22, 23},
         {6, 7, 8, 15, 16, 17, 24, 25, 26},
@@ -87,7 +87,8 @@ public class Sudoku2 implements Cloneable {
         {57, 58, 59, 66, 67, 68, 75, 76, 77},
         {60, 61, 62, 69, 70, 71, 78, 79, 80}
     };
-    /** All indices for all constraints: first lines, then cols, then blocks */
+    /** All indices for all constraints: first lines, then cols, then blocks */  
+    //在各个约束中网格的索引（方便查询），首先是行，其次是列，最后是宫
     public static final int[][] ALL_UNITS = {
         LINES[0], LINES[1], LINES[2], LINES[3], LINES[4], LINES[5], LINES[6], LINES[7], LINES[8],
         COLS[0], COLS[1], COLS[2], COLS[3], COLS[4], COLS[5], COLS[6], COLS[7], COLS[8],
@@ -138,7 +139,7 @@ public class Sudoku2 implements Cloneable {
         0x0100  //100000000
     };
     /** Mask for "all digits set" */
-    public static final short MAX_MASK = 0x01ff; //111111111
+    public static final short MAX_MASK = 0x01ff; //111111111,9个候选数
     /** for each of the 256 possible bit combinations the matching array (for iteration) */    //0x1ff==511 种可能性  C(9,1)+C(9,2)+C(9,3)+C(9,4)+C(9,5)+C(9,6)+C(9,7)+C(9,8)+C(9,9)=511, 加上一种0，就是512种
     public static final int[][] POSSIBLE_VALUES = new int[0x200][];   //511 种可能性,  掩码查询用，输入组合掩码，返回数字数组，候选数   候选掩码和数组对应表
     /** The length of the array in {@link #POSSIBLE_VALUES} for each bit combination. */
@@ -148,7 +149,7 @@ public class Sudoku2 implements Cloneable {
     /** The candidate represented by the least significant bit that is set in a candidate mask.
      *  If only one bit is set, the array contains the value of that bit (candidate). */
     //候选掩码中最小的那个数
-    public static final short[] CAND_FROM_MASK = new short[0x200];
+    public static final short[] CAND_FROM_MASK = new short[0x200];  //1000000000=111111111+1
     
     // Templates
     //bitmap用于表示数字的组合
@@ -192,13 +193,13 @@ public class Sudoku2 implements Cloneable {
      *  go from 1 to 9). Used to detect Hidden Singles easily */     //用于识别Hidden Singles
     private byte[][] free = new byte[ALL_UNITS.length][UNITS + 1];   //表示 所在行/列/宫的特定候选数的数量，用于hidden singles;
     /** number of unfilled cells in the grid */
-    private int unsolvedCellsAnz;
+    private int unsolvedCellsAnz;  //未填的格子数
     /** The values of the cells (0 means cell not set); if a cell is set, the corresponding entry in {@link #cells} is deleted */
     private int[] values = new int[LENGTH];   //数独值
     /** Determines if cell is a given */
-    private boolean[] fixed = new boolean[LENGTH];
+    private boolean[] fixed = new boolean[LENGTH];  ////是否是题目出的，固定的
     /** The correct values of the solution */
-    private int[] solution = new int[LENGTH];
+    private int[] solution = new int[LENGTH]; //解题中正确的值
     /** Indicates if solution has been set! */
     private boolean solutionSet = false;
     /** The difficulty level of this puzzle */
@@ -216,7 +217,9 @@ public class Sudoku2 implements Cloneable {
     // while setting/deleting candidates; two synchronized arrays contain index/value pairs
     /** A queue for newly detected Naked Singles */     //一个格子，通过所在作用范围（行，列，宫）排除后，只能填唯一的数字
     private SudokuSinglesQueue nsQueue = new SudokuSinglesQueue();
-    /** A queue for newly detected Hidden Singles */    //一个格子中的候选数有多个，但是该格子中有一个候选数， 不在所在区（行/列/宫）的其他格子的候选数中
+    /** A queue for newly detected Hidden Singles */    
+    //一个格子中的候选数有多个，但是该格子中有一个候选数， 不在所在区（行/列/宫）的其他格子的候选数中
+    // 在某行/列/宫中，有一个候选数只有1个
     private SudokuSinglesQueue hsQueue = new SudokuSinglesQueue();
 
     static {
@@ -2066,6 +2069,7 @@ public class Sudoku2 implements Cloneable {
         }
 
         // Ein Set für jedes Haus mit allen Zellen des Hauses
+        //A set for every house with all the cells of the house
         for (int i = 0; i < UNITS; i++) {
             LINE_TEMPLATES[i] = new SudokuSet();
             for (int j = 0; j < LINES[i].length; j++) {
@@ -2335,6 +2339,7 @@ public class Sudoku2 implements Cloneable {
      * @param value
      * @return Returns, if Hidden Single could be found
      */
+    //发现了一个hiddenSingle
     private boolean addHiddenSingle(int constraint, int value) {
         for (int i = 0; i < ALL_UNITS[constraint].length; i++) {
             // Hidden Single: The candidate in question is present in only one cell of
@@ -2345,6 +2350,9 @@ public class Sudoku2 implements Cloneable {
                 hsQueue.addSingle(hsIndex, value);
 //                System.out.println("addHiddenSingle: " + hsIndex + "/" + value);
                 return true;
+            }else
+            {
+                System.out.println("not Candidate addHiddenSingle: " + hsIndex + "/" + value);
             }
         }
         return false;
